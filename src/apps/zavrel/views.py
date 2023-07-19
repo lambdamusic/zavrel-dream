@@ -10,13 +10,27 @@ from .models import *
 
 def index(request, page=""):
 	
-	q = request.GET.get("q", "")
-
 	t = get_text()
+	allpages_no = len(t)
 
-	context = {	'data' : t , 
-				'q' : q , 
-				}
+	try:
+		page_no = int(page)
+		page = (page_no, t[page_no])
+		nextpage_no = page_no + 1
+		if nextpage_no > 19:
+			nextpage_no = 1
+	except:
+		page = None
+		nextpage_no = None
+
+	print("Page: ", page)
+
+	context = {	
+		'alltext' : t , 
+		'page' : page,
+		'nextpage_no' : nextpage_no, 
+		'allpages_no' : allpages_no 
+		}
 
 	return render(request, "zavrel/home.html", context)
 
@@ -24,7 +38,7 @@ def index(request, page=""):
 
 
 
-def get_text():
+def get_text(number=None):
 	"""Read simple markdown file and spit out a dictionary with the text
 		{1 : "...", 2 : "...."} etc..
 	"""
@@ -39,6 +53,9 @@ def get_text():
 			n += 1
 			data[n] = x.replace("\n", "")
 	
-	return data
+	try:
+		return data[number]
+	except:
+		return data
 
 

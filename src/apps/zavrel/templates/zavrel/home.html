@@ -20,35 +20,69 @@
 
 
 	
-	<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		
-		<h1>A Dream in Venice</h1>
+		<h1><a class="quietlink" href="{% url 'zavrel:home' %}">A Dream in Venice</a></h1>
 
 		<p>by Stepan Zavrel</p>
 
 
 		
-		{% for n, t in data.items  %}
+		{% if page %}
+		<!-- SINGLE PAGE -->
 
-			<div class="row">
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-					<h4>{{n}}</h4>
-					<p class="lead">{{t}}</p>
-				</div>
-			
-				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-					<img src="{% static '' %}img/{{n}}image.jpeg" class="img-responsive" alt="Image">
-			
-				</div>
+		<div class="row">
 
+			<hr>
+
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<h4>{{page.0}}</h4>
+				<p class="lead">{{page.1}}</p>
+			</div>
+		
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<a href="{% url 'zavrel:pages' nextpage_no %}">
+					<img src="{% static '' %}img/{{page.0}}image.jpeg" class="img-responsive" alt="Image" width="100%;">
+				</a>
 			</div>
 
-
-
+		</div>
 
 			
-		{% endfor %}
+		{% else %}
+		<!-- BOOK INDEX  -->
+
+		<div class="row">
+			<hr>
+
+			<div class="container">
 			
+
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						{% for n, t in alltext.items  %}
+						<a class="quietlink" href="{% url 'zavrel:pages' n %}"><b>{{n}}</b>&nbsp;<span class="">{{t|truncatewords:10}}</span></a><br />
+						{% endfor %}
+					</div>
+				
+					
+					<div class="col-xs-4 col-sm-4 col-md-6 col-lg-4">
+						<a href="{% url 'zavrel:pages' 1 %}">
+							<img src="{% static '' %}img/bookcover.jpeg" class="img-responsive" alt="Image">
+						</a>
+					</div>
+
+				</div>
+
+				
+			
+			</div>
+
+		</div>
+			
+		{% endif %}
+			
+
 
 		
 
@@ -56,7 +90,7 @@
 	
 
 
-</div>
+</div> <!-- end of row -->
 
 
 
