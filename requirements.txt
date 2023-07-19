@@ -1,0 +1,11 @@
+django==2.2.10
+django-extensions>=2.2.9
+Werkzeug>=0.15.3
+click
+# mysqlclient>=1.3.13 # note: on mac os you need MySql v5 installed
+pygments
+django-click
+
+
+
+
