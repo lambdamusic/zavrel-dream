@@ -12,24 +12,30 @@ def index(request, page=""):
 	
 	t = get_text()
 	allpages_no = len(t)
+	is_last = False
 
 	try:
+		# single page
 		page_no = int(page)
-		page = (page_no, t[page_no])
+		if allpages_no == page_no:
+			is_last = True
+		page_data = (page_no, t[page_no])
 		nextpage_no = page_no + 1
 		if nextpage_no > 19:
 			nextpage_no = 1
 	except:
-		page = None
+		# index page
+		page_data = None
 		nextpage_no = None
 
-	print("Page: ", page)
+	print("Page: ", page_data)
 
 	context = {	
 		'alltext' : t , 
-		'page' : page,
+		'page' : page_data,
 		'nextpage_no' : nextpage_no, 
-		'allpages_no' : allpages_no 
+		'allpages_no' : allpages_no,
+		'is_last' : is_last 
 		}
 
 	return render(request, "zavrel/home.html", context)
@@ -47,12 +53,28 @@ def get_text(number=None):
 
 	data = {}
 
-	n = 0
+	#
+	# Read source file
+	# Newlines are preserved as <br />
+	# '#' sign is used to delimit a page 
+	#
+	linenumber = 0
+	buffertext = ""
 	for x in text:
-		if x != "\n" and x[0] != "#":
-			n += 1
-			data[n] = x.replace("\n", "")
+		if x == "\n" and not buffertext: 
+			# skip first empty line
+			continue
+		elif x[0] == "#":  
+			# new page: save buffer and zero variables
+			if linenumber:
+				data[linenumber] = buffertext
+			linenumber += 1
+			buffertext = ""
+		else: 
+			# load buffer
+			buffertext += x.replace("\n", "<br />")
 	
+
 	try:
 		return data[number]
 	except:
